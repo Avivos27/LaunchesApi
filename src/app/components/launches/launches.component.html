@@ -1,0 +1,87 @@
+<div class="container launches-container">
+  <div class="row">
+    <div class="loading-indicator col-sm-12" *ngIf="launchesShown === null">
+      <div class="text">Loading launches</div>
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+    <div *ngIf="launchesShown !== null">
+      <div class="row controls">
+        <div class="search col-xs-6">
+          <app-search-input
+            (searchRequest)="onInputRequest($event)"
+          ></app-search-input>
+        </div>
+        <div class="saved-switch col-xs-6">
+          <span class="text">Show my saved launches</span>
+          <label class="switch">
+            <input type="checkbox" (click)="toggleSavedLaunchesView()" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+      <div
+        class="launch-card card col-sm-3"
+        *ngFor="let launch of launchesShown; let i = index"
+        [@fadeInOnEnter]
+        [@fadeOutOnLeave]
+      >
+        <div class="border-wrapper">
+          <div class="img-wrapper">
+            <a [href]="launch.rocketImage" target="_blank">
+              <img
+                src="{{launch?.thumbnailRocketImage}}"
+                [hidden]="!imageReady || !imageReady[launch.id]"
+              />
+            </a>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ launch.name }}</h5>
+            <div class="card-text">
+              <div class="dates">Start: {{ launch.start }}</div>
+              <div class="dates">End: {{ launch.end }}</div>
+            </div>
+            <div class="card-buttons">
+              <a
+                class="btn btn-primary"
+                [routerLink]="['/launches/' + launch.id]"
+                >More details</a
+              >
+              <img
+                *ngIf="getFromStorage(launch)"
+                (click)="toggleSaveLaunch(launch)"
+                class="save-icons"
+                src="/src/assets/images/icons-saved-48.png"
+              />
+              <img
+                *ngIf="!getFromStorage(launch)"
+                (click)="toggleSaveLaunch(launch)"
+                class="save-icons"
+                src="/src/assets/images/icons-save-48.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-sm-12 no-results"
+        *ngIf="launchesShown.length === 0 && !waitingOnRequest"
+        [@fadeInOnEnter]
+      >
+        No results...
+      </div>
+
+      <div class="col-sm-12 loading-more-indicator" *ngIf="waitingOnRequest">
+        <div class="text">Loading more launches</div>
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

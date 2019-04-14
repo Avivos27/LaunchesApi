@@ -1,0 +1,97 @@
+<div *ngIf="launch" class="container">
+  <div class="row">
+    <div class="heading col-xs-12">
+      <h1>
+        {{ launch.name }}
+        <span
+          [ngClass]="{
+            success: launch.status === 3,
+            fail: launch.status !== 3
+          }"
+          >{{ launch.status === 3 ? "(Successful)" : "(Failed)" }}</span
+        >
+      </h1>
+    </div>
+    <div class="details col-xs-8" *ngIf="launch.location">
+      <div class="dates">
+        <h3>Dates</h3>
+        <div class="col-xs-12">
+          <div>Start date: {{ launch.windowstart }}</div>
+          <div>End date: {{ launch.windowend }}</div>
+        </div>
+      </div>
+      <div class="location">
+        <h3>Location</h3>
+        <div class="col-xs-12">
+          <div class="detail">{{ launch.location?.name }}</div>
+        </div>
+      </div>
+      <div class="pads" *ngIf="launch.location.pads">
+        <h3>Pads</h3>
+        <div class="pad" *ngFor="let pad of launch.location.pads">
+          <div class="col-xs-12">
+            <div class="detail">{{ pad.name }}</div>
+            <div class="detail" *ngIf="pad.wikiURL">
+              <a [href]="pad.wikiURL" target="_blank">Wikipedia link</a>
+            </div>
+            <div class="detail" *ngIf="pad.mapURL">
+              <a [href]="pad.mapURL" target="_blank">Google maps link</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="missions" *ngIf="launch.missions">
+        <h3>Missions</h3>
+
+        <div class="col-xs-12">
+          <div class="mission" *ngFor="let mission of launch.missions">
+            <div class="detail">
+              <b>Mission {{ mission.name }}</b>
+            </div>
+            <p class="detail">{{ mission.description }}</p>
+            <div class="detail" *ngIf="mission.wikiURL">
+              <a [href]="mission.wikiURL" target="_blank">Wikipedia link</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rocket" *ngIf="launch.rocket">
+        <h3>Rocket</h3>
+        <div class="details col-xs-8">
+          <div class="detail">
+            <b>{{ launch.rocket.name }}</b>
+          </div>
+          <div class="detail" *ngIf="launch.rocket.configuration">
+            Configuration: {{ launch.rocket.configuration }}
+          </div>
+          <div class="detail" *ngIf="launch.rocket.configuration">
+            Family name: {{ launch.rocket.familyname }}
+          </div>
+
+          <div class="detail" *ngIf="launch.rocket.wikiURL">
+            <a [href]="launch.rocket.wikiURL" target="_blank">Wikipedia link</a>
+            <div class="link" *ngFor="let link of launch.rocket.infoURLs">
+              <a [href]="link" target="_blank">{{ link }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="image col-xs-4"><img [src]="launch.rocket.imageURL" /></div>
+      </div>
+    </div>
+
+    <div class="links col-xs-4">
+      <h3>Links</h3>
+
+      <div class="video-links">
+        <div class="link" *ngFor="let link of launch.vidURLs">
+          <div [innerHtml]="embedYoutube(link)"></div>
+        </div>
+      </div>
+      <div class="info-links">
+        <div class="link" *ngFor="let link of launch.infoURLs">
+          <a [href]="link" target="_blank">{{ link }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
